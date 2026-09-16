@@ -6,6 +6,7 @@ import pandas as pd
 # ============================================
 st.set_page_config(
     page_title="Atelier — Perfumes Originales",
+    
     page_icon="🥃",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -131,9 +132,9 @@ except Exception:
 # ============================================
 # DATOS DE CONTACTO Y MARCA (personaliza aquí)
 # ============================================
-WHATSAPP_NUMBER = "521234567890"
-INSTAGRAM = "atelierperfumes"
-CIUDAD = "Tu ciudad"
+WHATSAPP_NUMBER = "+573215207592"
+INSTAGRAM = "@fortezzaperfums"
+CIUDAD = "Pereira, Risaralda"
 HORARIO = "Lunes a sábado: 9am a 7pm"
 
 # ============================================
