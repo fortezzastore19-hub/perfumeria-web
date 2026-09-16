@@ -5,8 +5,7 @@ import pandas as pd
 # CONFIGURACIÓN DE LA PÁGINA
 # ============================================
 st.set_page_config(
-    page_title="Atelier — Perfumes Originales",
-    
+    page_title="Fortezza — Perfumes Originales",
     page_icon="🥃",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -112,12 +111,33 @@ st.markdown("""
 # ============================================
 # 1. En tu Google Sheet: Archivo > Compartir > Publicar en la Web
 # 2. Selecciona la hoja, formato CSV, Publicar, y pega el link aquí:
-SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTT173GepzryFHTMSZJdxEbrYL4v-iA8LDV39T4A7lDBo3dX5ciZNW9--UrpIiXmtWpAGiqe8p2kTh/pub?gid=0&single=true&output=csv"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv"
 FOTO_RESPALDO = "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400"
 
 @st.cache_data(ttl=300)
 def cargar_catalogo(url):
     df = pd.read_csv(url)
+
+    # Normaliza los nombres de columna: quita espacios, tildes y mayúsculas
+    # para que no importe si en el Sheet escribiste "Categoria", "Categoría " o "CATEGORIA"
+    reemplazos_tilde = str.maketrans("áéíóúÁÉÍÓÚ", "aeiouAEIOU")
+    columnas_normalizadas = {}
+    for col in df.columns:
+        limpio = col.strip().translate(reemplazos_tilde).lower()
+        columnas_normalizadas[col] = limpio
+    df = df.rename(columns=columnas_normalizadas)
+
+    columnas_esperadas = {
+        "nombre": "Nombre", "marca": "Marca", "precio": "Precio",
+        "salida": "Salida", "corazon": "Corazon", "fondo": "Fondo",
+        "categoria": "Categoria", "foto": "Foto"
+    }
+    faltantes = [c for c in columnas_esperadas if c not in df.columns]
+    if faltantes:
+        st.error(f"A tu hoja de Google Sheets le faltan estas columnas (revisa tildes/espacios en los encabezados): {', '.join(faltantes)}")
+        st.stop()
+    df = df.rename(columns=columnas_esperadas)
+
     df["Precio"] = pd.to_numeric(df["Precio"], errors="coerce").fillna(0)
     df["Foto"] = df["Foto"].fillna(FOTO_RESPALDO)
     df = df.dropna(subset=["Nombre", "Marca"])
@@ -132,9 +152,9 @@ except Exception:
 # ============================================
 # DATOS DE CONTACTO Y MARCA (personaliza aquí)
 # ============================================
-WHATSAPP_NUMBER = "+573215207592"
-INSTAGRAM = "@fortezzaperfums"
-CIUDAD = "Pereira, Risaralda"
+WHATSAPP_NUMBER = "521234567890"
+INSTAGRAM = "atelierperfumes"
+CIUDAD = "Tu ciudad"
 HORARIO = "Lunes a sábado: 9am a 7pm"
 
 # ============================================
