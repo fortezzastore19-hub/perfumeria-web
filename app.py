@@ -112,7 +112,7 @@ st.markdown("""
 # ============================================
 # 1. En tu Google Sheet: Archivo > Compartir > Publicar en la Web
 # 2. Selecciona la hoja, formato CSV, Publicar, y pega el link aquí:
-SHEET_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTT173GepzryFHTMSZJdxEbrYL4v-iA8LDV39T4A7lDBo3dX5ciZNW9--UrpIiXmtWpAGiqe8p2kTh/pub?gid=0&single=true&output=csv"
 FOTO_RESPALDO = "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400"
 
 @st.cache_data(ttl=300)
