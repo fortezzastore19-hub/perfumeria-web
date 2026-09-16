@@ -5,7 +5,7 @@ import pandas as pd
 # CONFIGURACIÓN DE LA PÁGINA
 # ============================================
 st.set_page_config(
-    page_title="Fortezza — Perfumes Originales",
+    page_title="Atelier — Perfumes Originales",
     page_icon="🥃",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -204,12 +204,20 @@ st.sidebar.markdown("**Filtrar catálogo**")
 marcas = ["Todas"] + sorted(df["Marca"].unique().tolist())
 marca_seleccionada = st.sidebar.selectbox("Casa de perfumería", marcas)
 
-precio_max = st.sidebar.slider(
-    "Precio máximo (USD)",
-    min_value=int(df["Precio"].min()),
-    max_value=int(df["Precio"].max()),
-    value=int(df["Precio"].max())
-)
+precio_min_valor = int(df["Precio"].min())
+precio_max_valor = int(df["Precio"].max())
+
+if precio_min_valor == precio_max_valor:
+    # Solo hay un precio (o un perfume) en el catálogo todavía — no se puede mostrar un rango
+    precio_max = precio_max_valor
+    st.sidebar.markdown(f"Precio: ${precio_max_valor}")
+else:
+    precio_max = st.sidebar.slider(
+        "Precio máximo (USD)",
+        min_value=precio_min_valor,
+        max_value=precio_max_valor,
+        value=precio_max_valor
+    )
 
 busqueda = st.sidebar.text_input("Buscar por nombre")
 
