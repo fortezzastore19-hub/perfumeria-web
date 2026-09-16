@@ -5,123 +5,159 @@ import pandas as pd
 # CONFIGURACIÓN DE LA PÁGINA
 # ============================================
 st.set_page_config(
-    page_title="Perfumes Originales | Catálogo",
-    page_icon="🌸",
+    page_title="Atelier — Perfumes Originales",
+    page_icon="🥃",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # ============================================
-# ESTILO PERSONALIZADO (CSS)
+# ESTILO — CONCEPTO: ETIQUETA DE ATELIER
+# Papel marfil, verde botella, ámbar líquido.
+# Cada perfume se presenta como una ficha de
+# etiqueta, con las notas en pirámide olfativa
+# en vez de una lista genérica.
 # ============================================
 st.markdown("""
 <style>
-    /* Fondo general */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Jost', sans-serif;
+    }
+
     .stApp {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        background-color: #F3EEE4;
     }
 
-    /* Título principal */
-    .main-title {
-        text-align: center;
-        font-size: 3rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #d4af37, #f4e5c2, #d4af37);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0;
-        letter-spacing: 2px;
+    /* Encabezado */
+    .atelier-header {
+        text-align: left;
+        border-bottom: 1px solid #B8863E;
+        padding-bottom: 1.2rem;
+        margin-bottom: 2.2rem;
     }
 
-    .subtitle {
-        text-align: center;
-        color: #b8b8d1;
-        font-size: 1.1rem;
-        margin-top: 0;
-        margin-bottom: 2rem;
-        letter-spacing: 1px;
+    .atelier-eyebrow {
+        font-family: 'Jost', sans-serif;
+        font-weight: 400;
+        font-size: 0.8rem;
+        color: #6B5D4A;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.3rem;
     }
 
-    /* Tarjeta de producto */
-    .perfume-card {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 16px;
-        padding: 1.2rem;
-        margin-bottom: 1.5rem;
-        transition: transform 0.2s, border-color 0.2s;
-        height: 100%;
+    .atelier-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-weight: 600;
+        font-size: 3.2rem;
+        color: #1F2E28;
+        margin: 0;
+        line-height: 1.1;
     }
 
-    .perfume-card:hover {
-        transform: translateY(-5px);
-        border-color: #d4af37;
+    .atelier-subtitle {
+        font-family: 'Cormorant Garamond', serif;
+        font-style: italic;
+        font-size: 1.15rem;
+        color: #6B5D4A;
+        margin-top: 0.4rem;
+    }
+
+    /* Ficha de perfume */
+    .perfume-label {
+        border-top: 1px solid #B8863E;
+        padding-top: 0.9rem;
+        margin-top: 0.6rem;
+        margin-bottom: 2.4rem;
+    }
+
+    .perfume-house {
+        font-size: 0.78rem;
+        color: #6B5D4A;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.15rem;
     }
 
     .perfume-name {
-        color: #f4e5c2;
-        font-size: 1.3rem;
+        font-family: 'Cormorant Garamond', serif;
         font-weight: 600;
-        margin-bottom: 0.2rem;
+        font-size: 1.7rem;
+        color: #1F2E28;
+        margin-bottom: 0.5rem;
+        line-height: 1.1;
     }
 
-    .perfume-brand {
-        color: #b8b8d1;
-        font-size: 0.9rem;
-        font-style: italic;
+    /* Pirámide olfativa */
+    .pyramid-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: #6B5D4A;
+        margin-top: 0.6rem;
         margin-bottom: 0.6rem;
+        border-top: 1px dotted #C9BBA3;
+        padding-top: 0.5rem;
     }
 
-    .perfume-notes {
-        color: #d1d1e0;
-        font-size: 0.85rem;
-        margin-bottom: 0.8rem;
-        line-height: 1.4;
+    .pyramid-item {
+        flex: 1;
+    }
+
+    .pyramid-label {
+        display: block;
+        color: #B8863E;
+        font-size: 0.65rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .perfume-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.8rem;
     }
 
     .perfume-price {
-        color: #d4af37;
+        font-family: 'Cormorant Garamond', serif;
         font-size: 1.4rem;
-        font-weight: 700;
+        color: #1F2E28;
     }
 
-    .category-badge {
-        display: inline-block;
-        background: rgba(212, 175, 55, 0.2);
-        color: #d4af37;
-        padding: 0.2rem 0.7rem;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        margin-bottom: 0.5rem;
-    }
-
-    /* Botón de WhatsApp */
-    .whatsapp-btn {
-        display: inline-block;
-        background: #25D366;
-        color: white !important;
-        text-align: center;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
+    .whatsapp-link {
+        color: #1F2E28 !important;
         text-decoration: none;
-        font-weight: 600;
-        width: 100%;
-        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        border-bottom: 1px solid #B8863E;
+        padding-bottom: 2px;
     }
 
-    .whatsapp-btn:hover {
-        background: #1ebe5a;
+    .whatsapp-link:hover {
+        color: #B8863E !important;
+        border-bottom-color: #1F2E28;
     }
 
     /* Sidebar */
     section[data-testid="stSidebar"] {
-        background: #0f0f1e;
+        background-color: #EAE3D3;
+        border-right: 1px solid #C9BBA3;
+    }
+
+    section[data-testid="stSidebar"] * {
+        color: #1F2E28 !important;
+        font-family: 'Jost', sans-serif;
+    }
+
+    /* Imagen */
+    div[data-testid="stImage"] img {
+        filter: sepia(8%);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================
 # DATOS DE EJEMPLO (luego se conecta a Google Sheets)
+# Cada nota tiene 3 partes: salida, corazón, fondo
 # ============================================
 data = {
     "Nombre": [
@@ -135,18 +171,9 @@ data = {
         "Giorgio Armani", "Chanel"
     ],
     "Precio": [85, 95, 78, 82, 250, 65, 70, 88, 72, 98],
-    "Notas": [
-        "Bergamota, pimienta, ámbar",
-        "Cítrico, madera, incienso",
-        "Café, vainilla, flor de naranjo",
-        "Almendra, jazmín, cacao",
-        "Piña, abedul, almizcle",
-        "Cedro, lima, jazmín",
-        "Canela, cuero, ámbar",
-        "Iris, praliné, pachulí",
-        "Bergamota, jazmín acuático",
-        "Naranja, jazmín, pachulí"
-    ],
+    "Salida": ["Bergamota", "Limón", "Café", "Almendra", "Piña", "Cedro", "Canela", "Iris", "Bergamota", "Naranja"],
+    "Corazon": ["Pimienta", "Jengibre", "Vainilla", "Jazmín", "Abedul", "Manzana", "Cuero", "Praliné", "Jazmín acuático", "Jazmín"],
+    "Fondo": ["Ámbar", "Incienso", "Flor de naranjo", "Cacao", "Almizcle", "Cedro", "Ámbar", "Pachulí", "Almizcle blanco", "Pachulí"],
     "Categoria": [
         "Hombre", "Hombre", "Mujer", "Mujer",
         "Hombre", "Mujer", "Hombre", "Mujer",
@@ -176,19 +203,24 @@ WHATSAPP_NUMBER = "521234567890"  # formato: código país + número, sin + ni e
 # ============================================
 # ENCABEZADO
 # ============================================
-st.markdown('<p class="main-title">✨ PERFUMES ORIGINALES ✨</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Fragancias auténticas para cada ocasión</p>', unsafe_allow_html=True)
+st.markdown("""
+<div class="atelier-header">
+    <div class="atelier-eyebrow">CATÁLOGO DE FRAGANCIAS ORIGINALES</div>
+    <p class="atelier-title">Atelier</p>
+    <p class="atelier-subtitle">Cada frasco, una composición completa — de la primera impresión al fondo que queda en la piel.</p>
+</div>
+""", unsafe_allow_html=True)
 
 # ============================================
 # SIDEBAR - FILTROS
 # ============================================
-st.sidebar.header("🔍 Filtrar catálogo")
+st.sidebar.markdown("**Filtrar catálogo**")
 
 categorias = ["Todas"] + sorted(df["Categoria"].unique().tolist())
 categoria_seleccionada = st.sidebar.selectbox("Categoría", categorias)
 
 marcas = ["Todas"] + sorted(df["Marca"].unique().tolist())
-marca_seleccionada = st.sidebar.selectbox("Marca", marcas)
+marca_seleccionada = st.sidebar.selectbox("Casa de perfumería", marcas)
 
 precio_max = st.sidebar.slider(
     "Precio máximo (USD)",
@@ -200,7 +232,7 @@ precio_max = st.sidebar.slider(
 busqueda = st.sidebar.text_input("Buscar por nombre")
 
 st.sidebar.markdown("---")
-st.sidebar.markdown(f"**Total de perfumes:** {len(df)}")
+st.sidebar.markdown(f"{len(df)} fragancias en el catálogo")
 
 # ============================================
 # APLICAR FILTROS
@@ -219,7 +251,7 @@ if busqueda:
     df_filtrado = df_filtrado[df_filtrado["Nombre"].str.contains(busqueda, case=False)]
 
 # ============================================
-# MOSTRAR CATÁLOGO EN TARJETAS
+# MOSTRAR CATÁLOGO COMO FICHAS DE ETIQUETA
 # ============================================
 if len(df_filtrado) == 0:
     st.warning("No se encontraron perfumes con esos filtros.")
@@ -229,29 +261,33 @@ else:
 
     for row in rows:
         cols = st.columns(cols_per_row)
-        for col, (_, perfume) in zip(cols, row.iterrows()):
+        for col, (_, p) in zip(cols, row.iterrows()):
             with col:
-                mensaje_wpp = f"Hola! Me interesa el perfume {perfume['Nombre']} de {perfume['Marca']} (${perfume['Precio']})"
+                mensaje_wpp = f"Hola! Me interesa el perfume {p['Nombre']} de {p['Marca']} (${p['Precio']})"
                 link_wpp = f"https://wa.me/{WHATSAPP_NUMBER}?text={mensaje_wpp.replace(' ', '%20')}"
 
-                st.image(perfume["Foto"], use_container_width=True)
+                st.image(p["Foto"], use_container_width=True)
                 st.markdown(f"""
-                <div class="perfume-card">
-                    <span class="category-badge">{perfume['Categoria']}</span>
-                    <div class="perfume-name">{perfume['Nombre']}</div>
-                    <div class="perfume-brand">{perfume['Marca']}</div>
-                    <div class="perfume-notes">🌿 {perfume['Notas']}</div>
-                    <div class="perfume-price">${perfume['Precio']} USD</div>
-                    <a href="{link_wpp}" target="_blank" class="whatsapp-btn">💬 Consultar por WhatsApp</a>
+                <div class="perfume-label">
+                    <div class="perfume-house">{p['Marca'].upper()} · {p['Categoria']}</div>
+                    <div class="perfume-name">{p['Nombre']}</div>
+                    <div class="pyramid-row">
+                        <div class="pyramid-item"><span class="pyramid-label">SALIDA</span>{p['Salida']}</div>
+                        <div class="pyramid-item"><span class="pyramid-label">CORAZÓN</span>{p['Corazon']}</div>
+                        <div class="pyramid-item"><span class="pyramid-label">FONDO</span>{p['Fondo']}</div>
+                    </div>
+                    <div class="perfume-footer">
+                        <span class="perfume-price">${p['Precio']}</span>
+                        <a href="{link_wpp}" target="_blank" class="whatsapp-link">Consultar →</a>
+                    </div>
                 </div>
                 """, unsafe_allow_html=True)
 
 # ============================================
 # FOOTER
 # ============================================
-st.markdown("---")
 st.markdown("""
-<p style='text-align: center; color: #8888a8; font-size: 0.85rem;'>
-© 2026 Perfumes Originales — Todos los productos son 100% originales y garantizados
-</p>
+<div style='border-top: 1px solid #C9BBA3; margin-top: 2rem; padding-top: 1rem; text-align: center; color: #6B5D4A; font-size: 0.78rem;'>
+Atelier de Fragancias — todos los productos son 100% originales y garantizados
+</div>
 """, unsafe_allow_html=True)
